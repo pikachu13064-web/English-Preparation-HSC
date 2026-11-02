@@ -9,7 +9,7 @@ on:
       - '.github/workflows/android-apk.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -47,10 +47,22 @@ jobs:
         working-directory: project/hsc-english-2nd-paper
         run: gradle --no-daemon assembleDebug
 
-      - name: Upload APK artifact
+      - name: Upload APK as temporary artifact
         uses: actions/upload-artifact@v4
         with:
           name: HSC-English-2nd-Paper-APK
           path: project/hsc-english-2nd-paper/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 14
+
+      - name: Publish APK as a permanent GitHub Release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-latest
+          name: HSC English 2nd Paper APK
+          body: |
+            Latest installable debug APK for HSC English 2nd Paper.
+            Download the APK asset below and install it on your Android device.
+          files: project/hsc-english-2nd-paper/app/build/outputs/apk/debug/*.apk
+          overwrite_files: true
+          make_latest: true
