@@ -47,11 +47,16 @@ jobs:
         working-directory: project/hsc-english-2nd-paper
         run: gradle --no-daemon assembleDebug
 
+      - name: Rename APK
+        run: |
+          mkdir -p release
+          cp project/hsc-english-2nd-paper/app/build/outputs/apk/debug/*.apk release/HSCenglish.apk
+
       - name: Upload APK as temporary artifact
         uses: actions/upload-artifact@v4
         with:
           name: HSC-English-2nd-Paper-APK
-          path: project/hsc-english-2nd-paper/app/build/outputs/apk/debug/*.apk
+          path: release/HSCenglish.apk
           if-no-files-found: error
           retention-days: 14
 
@@ -62,7 +67,7 @@ jobs:
           name: HSC English 2nd Paper APK
           body: |
             Latest installable debug APK for HSC English 2nd Paper.
-            Download the APK asset below and install it on your Android device.
-          files: project/hsc-english-2nd-paper/app/build/outputs/apk/debug/*.apk
+            Download HSCenglish.apk below and install it on your Android device.
+          files: release/HSCenglish.apk
           overwrite_files: true
           make_latest: true
